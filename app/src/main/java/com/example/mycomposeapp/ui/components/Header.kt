@@ -13,6 +13,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.mycomposeapp.R
 
 @Composable
@@ -24,6 +25,7 @@ fun Header() {
         Text(
             text = stringResource(id = R.string.app_name),
             modifier = Modifier.background(colorResource(id = R.color.purple_200)),
-            color = Color.White)
+            color = Color.White,
+            fontSize = 18.sp)
     }
 }

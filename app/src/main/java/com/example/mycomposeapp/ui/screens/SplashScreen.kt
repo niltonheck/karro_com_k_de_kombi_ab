@@ -8,6 +8,7 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import com.example.mycomposeapp.ui.theme.Green700
 
 @Composable
 fun SplashScreen() {
@@ -16,6 +17,8 @@ fun SplashScreen() {
         .fillMaxHeight(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally) {
-        CircularProgressIndicator()
+        CircularProgressIndicator(
+            color = Green700
+        )
     }
 }
