@@ -2,32 +2,18 @@ package com.example.mycomposeapp
 
 import android.os.Bundle
 import android.util.Log
-import android.view.Gravity
-import android.view.Surface
-import android.widget.ProgressBar
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
-import androidx.compose.material.CircularProgressIndicator
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.focusModifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.example.mycomposeapp.datasource.ProductsDataSource
 import com.example.mycomposeapp.ui.screens.AppScreen
 import com.example.mycomposeapp.ui.screens.HomeScreen
-import com.example.mycomposeapp.ui.screens.SplashScreen
 import com.example.mycomposeapp.ui.theme.MyComposeAppTheme
-import com.example.mycomposeapp.ui.theme.Purple700
 import com.google.firebase.analytics.FirebaseAnalytics
 import com.google.firebase.analytics.ktx.analytics
+import com.google.firebase.installations.FirebaseInstallations
 import com.google.firebase.ktx.Firebase
-import com.google.firebase.remoteconfig.FirebaseRemoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfig
 import com.google.firebase.remoteconfig.ktx.remoteConfigSettings
 
@@ -42,6 +28,8 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        logFirebaseToken()
+
         val appState: MutableState<AppState> = mutableStateOf(AppState(true))
 
         firebaseAnalytics = Firebase.analytics
@@ -51,6 +39,7 @@ class MainActivity : ComponentActivity() {
             minimumFetchIntervalInSeconds = 10
         }
 
+        remoteConfig.setDefaultsAsync(R.xml.remote_config_defaults)
         remoteConfig.setConfigSettingsAsync(configSettings)
         remoteConfig.fetchAndActivate()
             .addOnCompleteListener(this) { task ->
@@ -71,6 +60,17 @@ class MainActivity : ComponentActivity() {
             AppScreen(appState = appState, analytics = firebaseAnalytics, remoteConfig = remoteConfig)
         }
     }
+}
+
+private fun logFirebaseToken() {
+    FirebaseInstallations.getInstance().getToken(/* forceRefresh */ true)
+        .addOnCompleteListener { task ->
+            if (task.isSuccessful) {
+                Log.d("Installations", "Installation auth token: " + task.result?.token)
+            } else {
+                Log.e("Installations", "Unable to get Installation auth token")
+            }
+        }
 }
 
 @Preview(showBackground = true)
